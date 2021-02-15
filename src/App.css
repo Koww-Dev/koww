@@ -5,13 +5,9 @@
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+  margin-left: 30px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
 
 .App-header {
   background-color: #282c34;
@@ -25,14 +21,7 @@
 }
 
 .App-link {
-  color: #61dafb;
+  color: #5A37D5;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+
