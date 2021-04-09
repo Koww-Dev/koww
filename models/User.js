@@ -7,6 +7,12 @@ const UserSchema = new mongoose.Schema({
     unique: true,
   },
 
+  userName: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  
   idKow: {
     type: String,
     required: true,
@@ -23,12 +29,6 @@ const UserSchema = new mongoose.Schema({
     required: true,
   },
 
-  userName: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-
   github: {
     type: String,
   },
@@ -37,10 +37,18 @@ const UserSchema = new mongoose.Schema({
     type: String,
   },
 
-  tecnologias: []
+  tecnologias: [{ type: String }],
+
+  isPremiun: {
+    type: Boolean,
+    default: false,
+  },
+
+  idProject: [{
+    type: String,
+    required: true,
+  }],
 });
-
-
 
 const User = mongoose.model('User', UserSchema);
 

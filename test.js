@@ -1,27 +1,26 @@
-// const mongoose = require('mongoose');
-
-// mongoose.connect('mongodb+srv://kowworking:123456789$@cluster0.wxksg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', { 
-//   useNewUrlParser: true, useUnifiedTopology: true
-// }).then(() => {
-//     console.log("Conectado")
-// }).catch((err) => {
-//     console.log("error" + err)
-// })
-
 const User = require('./models/User');
+const Project = require('./models/Projects')
 
-const email = 'ayrton@gmail.com'
+// User.create({
+//   email: 'Kevson',
+//   userName: 'kevson123',
+//   idKow: '321649875654',
+//   password: '12341234',
+//   name: 'Kevson Filipe'
+// })
+//   .then((response) => console.log(response, '1'))
+//   .then(() => User.db.close())
+//   .catch(error => console.log(error))
 
-User.create({
-  email,
-  idKow: 'skudhgfshdbffghjghjg',
-  password: 'sdhfbsdhfbsd',
-  name: 'allam',
-  userName: 'jsdkjfnbsjkdbf',
-}).then((response) => {
-  console.log(response);
-}).catch((error) => {
-  console.log(error)
-})
-
-User.findOne({ email }).select('+password')
+Project.create({
+  userId: 'Kevson',
+  idProject: '128374128734128734axczxc',
+  name: 'Hello World',
+  technologies: [
+    'javascript',
+    'react'
+  ],
+  description: 'sldkflsdknflk'
+}).then((response) => console.log(response, '1'))
+  .then(() => User.db.close())
+  .catch(error => console.log(error))
