@@ -27,6 +27,20 @@ const ProjecSchema = new mongoose.Schema({
     type: String,
     ref: 'User', 
   }],
+
+  idDocumentProject: {
+    type: String,
+  },
+
+  idVideoCall: {
+    type: String,
+    required: true,
+  },
+
+  idChat: {
+    type: String,
+    required: true,
+  }
 });
 
 const Project = mongoose.model('Projects', ProjecSchema);
