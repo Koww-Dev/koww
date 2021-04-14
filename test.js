@@ -1,7 +1,7 @@
-const User = require('./models/User');
-const Project = require('./models/Projects')
-const Notes = require('./models/Notes');
-const Todo = require('./models/Todo')
+const User = require('./src/models/User');
+const Project = require('./src/models/Projects')
+const Notes = require('./src/models/Notes');
+const Todo = require('./src/models/Todo')
 
 Todo.create({
   projectsId: 'ueqiuwdu',
