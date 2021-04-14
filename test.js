@@ -1,26 +1,30 @@
 const User = require('./models/User');
 const Project = require('./models/Projects')
+const Notes = require('./models/Notes');
+const Todo = require('./models/Todo')
 
-// User.create({
-//   email: 'Kevson',
-//   userName: 'kevson123',
-//   idKow: '321649875654',
-//   password: '12341234',
-//   name: 'Kevson Filipe'
-// })
-//   .then((response) => console.log(response, '1'))
-//   .then(() => User.db.close())
-//   .catch(error => console.log(error))
+Todo.create({
+  projectsId: 'ueqiuwdu',
 
-Project.create({
-  userId: 'Kevson',
-  idProject: '128374128734128734axczxc',
-  name: 'Hello World',
-  technologies: [
-    'javascript',
-    'react'
-  ],
-  description: 'sldkflsdknflk'
-}).then((response) => console.log(response, '1'))
-  .then(() => User.db.close())
-  .catch(error => console.log(error))
+  name: 'asdasdasd',
+
+  Todo: {
+    time: 123187238172837,
+
+    blocks: [
+      {
+        typeEditor: 'sdaflkdsfk',
+
+        data: {
+          text: 'ksdfskmdf',
+          level: 72349817234,
+          style: 'dajndjfnaskdf',
+          items: ['sldfaldsf', 'jfkaldkfalkdsmf', 'kjdfajndfnaosd']
+        }
+      }
+    ],
+    version: 'skaldflaksdlfmkadlkfm'
+  }
+}).then(response => {
+  console.log(response)
+})

@@ -32,7 +32,7 @@ const DocumentProjectSchema = new mongoose.Schema({
       }
     ],
     version: {
-        type: String
+      type: String
     }
   },
 
@@ -62,7 +62,7 @@ const DocumentProjectSchema = new mongoose.Schema({
       }
     ],
     version: {
-        type: String
+      type: String
     }
   },
 
@@ -98,7 +98,7 @@ const DocumentProjectSchema = new mongoose.Schema({
       }
     ],
     version: {
-        type: String
+      type: String
     }
   },
 
