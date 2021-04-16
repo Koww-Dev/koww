@@ -1,16 +1,16 @@
-const mongoose = require('../database');
+import mongoose from '../../database';
 
-const NotesSchema = new mongoose.Schema({
+const TodoSchema = new mongoose.Schema({
   projectsId: {
     type: String,
-    required: true
+    required: true,
   },
 
   name: {
     type: String,
   },
 
-  notes: {
+  Todo: {
     time: {
       type: Number,
     },
@@ -31,16 +31,16 @@ const NotesSchema = new mongoose.Schema({
           style: {
             type: String,
           },
-          items: [{ type: String }]
-        }
-      }
+          items: [{ type: String }],
+        },
+      },
     ],
     version: {
-      type: String
-    }
-  }
+      type: String,
+    },
+  },
 });
 
-const Notes = mongoose.model('Notes', NotesSchema);
+const Todo = mongoose.model('Todo', TodoSchema);
 
-module.exports = Notes;
+module.exports = Todo;

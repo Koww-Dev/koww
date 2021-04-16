@@ -1,9 +1,9 @@
-const mongoose = require('../database');
+import mongoose from '../../database';
 
 const DocumentProjectSchema = new mongoose.Schema({
   idDocument: {
     type: String,
-    required: true
+    required: true,
   },
 
   wiki: {
@@ -27,13 +27,13 @@ const DocumentProjectSchema = new mongoose.Schema({
           style: {
             type: String,
           },
-          items: [{ type: String }]
-        }
-      }
+          items: [{ type: String }],
+        },
+      },
     ],
     version: {
-      type: String
-    }
+      type: String,
+    },
   },
 
   Roadmap: {
@@ -57,19 +57,19 @@ const DocumentProjectSchema = new mongoose.Schema({
           style: {
             type: String,
           },
-          items: [{ type: String }]
-        }
-      }
+          items: [{ type: String }],
+        },
+      },
     ],
     version: {
-      type: String
-    }
+      type: String,
+    },
   },
 
-  ToDo : [
+  ToDo: [
     {
       type: String,
-    }
+    },
   ],
 
   Documentation: {
@@ -93,20 +93,20 @@ const DocumentProjectSchema = new mongoose.Schema({
           style: {
             type: String,
           },
-          items: [{ type: String }]
-        }
-      }
+          items: [{ type: String }],
+        },
+      },
     ],
     version: {
-      type: String
-    }
+      type: String,
+    },
   },
 
   notes: {
     time: {
-        type: Number,
-      },
-  
+      type: Number,
+    },
+
     blocks: [
       {
         typeEditor: {
@@ -123,16 +123,16 @@ const DocumentProjectSchema = new mongoose.Schema({
           style: {
             type: String,
           },
-          items: [{ type: String }]
-        }
-      }
+          items: [{ type: String }],
+        },
+      },
     ],
     version: {
-      type: String
-    }
-  }
+      type: String,
+    },
+  },
 });
 
 const DocumentProject = mongoose.model('Projects', DocumentProjectSchema);
 
-module.exports = User;
+export default DocumentProject;

@@ -1,4 +1,4 @@
-const mongoose = require('../database');
+import mongoose from '../../database';
 
 const ProjecSchema = new mongoose.Schema({
   userId: {
@@ -16,7 +16,7 @@ const ProjecSchema = new mongoose.Schema({
     required: true,
   },
 
-  technologies: [{ type: String, required: true, }],
+  technologies: [{ type: String, required: true }],
 
   description: {
     type: String,
@@ -25,7 +25,7 @@ const ProjecSchema = new mongoose.Schema({
 
   participantsId: [{
     type: String,
-    ref: 'User', 
+    ref: 'User',
   }],
 
   idDocumentProject: {
@@ -40,7 +40,7 @@ const ProjecSchema = new mongoose.Schema({
   idChat: {
     type: String,
     required: true,
-  }
+  },
 });
 
 const Project = mongoose.model('Projects', ProjecSchema);

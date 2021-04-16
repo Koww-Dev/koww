@@ -1,4 +1,4 @@
-const mongoose = require('../database');
+import mongoose from '../../database';
 
 const ChatSchema = new mongoose.Schema({
   idChat: {
@@ -31,12 +31,12 @@ const ChatSchema = new mongoose.Schema({
         time: {
           type: String,
           required: true,
-        }
-      }
-    }
-  ]
+        },
+      },
+    },
+  ],
 });
 
-const Chat = mongoose.model('Chat', UserSchema);
+const Chat = mongoose.model('Chat', ChatSchema);
 
-module.exports = User;
+export default Chat;
