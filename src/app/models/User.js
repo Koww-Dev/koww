@@ -16,6 +16,7 @@ const UserSchema = new mongoose.Schema({
   idKow: {
     type: String,
     required: true,
+    unique: true,
   },
 
   password_hash: {
@@ -44,10 +45,12 @@ const UserSchema = new mongoose.Schema({
     default: false,
   },
 
-  idProject: [{
-    type: String,
-    required: true,
-  }],
+  idProject: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
 });
 
 const User = mongoose.model('User', UserSchema);

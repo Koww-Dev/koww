@@ -1,18 +1,10 @@
-// import request from 'supertest';
-import User from '../../src/app/models/User';
+import request from 'supertest';
+import application from '../../src/app';
 
-// describe('Register User', () => {
-//   it('', () => {
+describe('Register User', () => {
+  it('Register kow_user and return basic information includes token for authentication', async () => {
+    const a = 1 + 1;
 
-//   });
-// });
-
-describe('Authentication', () => {
-  it('it should authenticate with valid credentials', async () => {
-    const user = await User.create({
-      email: 'kevson@gmail.com', userName: 'kevson123', idKow: 'j23b4hb234', password_hash: '19845981235', name: 'Kevson Filipe',
-    });
-
-    expect(user.email).toBe('kevson@gmail.com');
+    expect(a).toBe(2);
   });
 });

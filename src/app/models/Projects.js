@@ -4,11 +4,13 @@ const ProjecSchema = new mongoose.Schema({
   userId: {
     type: String,
     required: true,
+    unique: true,
   },
 
   idProject: {
     type: String,
     required: true,
+    unique: true,
   },
 
   name: {
@@ -26,6 +28,7 @@ const ProjecSchema = new mongoose.Schema({
   participantsId: [{
     type: String,
     ref: 'User',
+    unique: true,
   }],
 
   idDocumentProject: {
@@ -45,4 +48,4 @@ const ProjecSchema = new mongoose.Schema({
 
 const Project = mongoose.model('Projects', ProjecSchema);
 
-module.exports = Project;
+export default Project;

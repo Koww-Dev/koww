@@ -6,6 +6,11 @@ const NotesSchema = new mongoose.Schema({
     required: true,
   },
 
+  idProject: {
+    type: String,
+    required: true,
+  },
+
   name: {
     type: String,
   },

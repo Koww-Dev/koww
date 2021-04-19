@@ -1,4 +1,5 @@
 import express from 'express';
+import routes from './routes/session.routes';
 
 class AppController {
   constructor() {
@@ -9,12 +10,12 @@ class AppController {
   }
 
   middlewares() {
-    this.express.use(express.json);
+    this.express.use(express.json());
   }
 
-  // routes() {
-  //   this.express.use(require('./routes/session.routes'));
-  // }
+  routes() {
+    this.express.use(routes);
+  }
 }
 
-export default AppController;
+export default new AppController().express;

@@ -1,5 +1,3 @@
-import express from 'express';
+import app from './app';
 
-const app = express();
-
-app.listen(process.env.PORT || 2000);
+app.listen(3000);

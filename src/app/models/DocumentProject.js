@@ -6,6 +6,11 @@ const DocumentProjectSchema = new mongoose.Schema({
     required: true,
   },
 
+  idProject: {
+    type: String,
+    required: true,
+  },
+
   wiki: {
     time: {
       type: Number,

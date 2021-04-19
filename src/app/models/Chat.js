@@ -6,6 +6,11 @@ const ChatSchema = new mongoose.Schema({
     required: true,
   },
 
+  idProject: {
+    type: String,
+    required: true,
+  },
+
   message: [
     {
       idEmail: {
