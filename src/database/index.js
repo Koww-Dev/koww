@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-mongoose.connect('mongodb+srv://kowworking:GY4mYTl0Si3chek5@kowworking-tests.wxksg.mongodb.net/Kowworking-tests?retryWrites=true&w=majority',
+mongoose.connect('mongodb://localhost/tests',
   { useNewUrlParser: true, useUnifiedTopology: true, autoIndex: false });
 mongoose.Promise = global.Promise;
 
