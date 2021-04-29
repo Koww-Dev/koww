@@ -1,5 +1,5 @@
 import express from 'express';
-import routes from './routes/session.routes';
+import routes from './routes/user.routes';
 
 class AppController {
   constructor() {

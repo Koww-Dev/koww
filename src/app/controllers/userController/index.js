@@ -1,5 +1,4 @@
-import crypto from 'crypto';
-
+// import crypto from 'crypto';
 import User from '../../models/User';
 
 class UserController {
@@ -7,53 +6,90 @@ class UserController {
 
   /**
    * Creates an instance of Circle.
-   *
-   * @author: Kevson Filipe
-   * @param {import("express").Response} request
+   * @author Kevson Filipe
+   * @param {string} pass
+   */
+  #validationPassword = (pass) => {
+    const letterUpercase = /[A-Z]/;
+    const letterLowcase = /[a-z]/;
+    const numeros = /[0-9]/;
+    let isPassValid = false;
+
+    let auxMaiuscula = 0;
+    let auxMinuscula = 0;
+    let auxNumero = 0;
+
+    for (let index = 0; index < pass.length; index += 1) {
+      if (letterUpercase.test(pass[index])) {
+        auxMaiuscula += 1;
+      } else if (letterLowcase.test(pass[index])) {
+        auxMinuscula += 1;
+      } else if (numeros.test(pass[index])) {
+        auxNumero += 1;
+      }
+    }
+
+    if (auxMaiuscula >= 3) {
+      if (auxMinuscula >= 3) {
+        if (auxNumero >= 3) {
+          isPassValid = true;
+        }
+      }
+    }
+
+    return isPassValid;
+  }
+
+  /**
+   * Creates an instance of Circle.
+   * @author Kevson Filipe
+   * @param {import("express").Request} request
    * @param {import("express").Response} response
   */
   createUser = async (request, response) => {
+    /**
+     * @type {{ email: string, name: string, userName: string, password: string }}
+    */
     const {
       email, name, userName, password,
     } = request.body;
-
     try {
-      const isValidUserName = await this.userModel.findOne({ userName });
-      const isValidEmail = await this.userModel.findOne({ email });
+      if (!email.includes('@') || !email.includes('.com')) {
+        return response.status(401).json({ message: 'e-mail inválido.' });
+      }
 
-      if (!email.includes('@') || !email.includes('.com') || email.legth <= 0) {
-        return response.json({ message: 'e-mail inválido' });
+      const existEmail = await this.userModel.findOne({ email });
+      const existUserName = await this.userModel.findOne({ userName });
+
+      if (existEmail) {
+        return response.status(401).json({ message: 'Este e-mail já está cadastrado.' });
+      }
+
+      if (existUserName) {
+        return response.status(401).json({ message: 'Este username já está cadastrado.' });
       }
 
       if (name.length <= 0) {
-        return response.json({ message: 'nome inválido' });
+        return response.status(401).json({ message: 'nome muito curto.' });
       }
 
-      if (isValidEmail) {
-        return response.json({ message: 'Este e-mail já existe' });
+      if (password.length <= 8) {
+        return response.status(401).json({ message: 'sua seha deve ter no mínimo 8 caracteres.' });
       }
 
-      if (isValidUserName) {
-        return response.json({ message: 'Este userName já existe' });
+      if (this.#validationPassword(password) === false) {
+        return response.status(401).json({
+          message: 'Sua senha de ter no mínimo 3 letras maiúscula,  3 minúscula e 3 números',
+        });
       }
 
-      if (password.length <= 7) {
-        return response.json({ message: 'A senha deve ter no mínimo 8 caracteres' });
-      }
-
-      const hMac = crypto.createHmac('sha256', 'Açai com banana').update(password).digest('hex');
-
-      const idKow = `${crypto.randomBytes(25).toString('hex')}/${userName}/${email}`;
-
-      const data = await this.userModel.create({
-        email, name, userName, hashPassword: hMac, idKow,
+      const user = await this.userModel.create({
+        email, name, userName, hashPassword: 'a18u2981fgdfghf28u0', idKow: 'a18u2dsfhgdfg98128u0',
       });
-
-      this.userModel.db.close();
-
-      return response.json({ message: 'Conta cadastrada com sucesso, ative sua conta através do e-mail', data });
+      return response.status(201).json({ message: 'Conta cadastrada com sucesso, ative sua conta através do e-mail', user });
     } catch (error) {
-      return response.json({ message: 'Houve um erro ao efetuar o cadastro' });
+      console.log(error);
+      return response.status(500).json({ message: 'internal server error. we are working to fix it' });
     }
   }
 }
