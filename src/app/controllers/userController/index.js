@@ -1,4 +1,4 @@
-// import crypto from 'crypto';
+import crypto from 'bcryptjs';
 import User from '../../models/User';
 
 class UserController {
@@ -46,52 +46,55 @@ class UserController {
    * @param {import("express").Request} request
    * @param {import("express").Response} response
   */
-  createUser = async (request, response) => {
-    /**
+   createUser = async (request, response) => {
+     /**
      * @type {{ email: string, name: string, userName: string, password: string }}
     */
-    const {
-      email, name, userName, password,
-    } = request.body;
-    try {
-      if (!email.includes('@') || !email.includes('.com')) {
-        return response.status(401).json({ message: 'e-mail inválido.' });
-      }
+     const {
+       email, name, userName, password,
+     } = request.body;
+     try {
+       if (!email.includes('@') || !email.includes('.com')) {
+         return response.status(401).json({ message: 'e-mail inválido.' });
+       }
 
-      const existEmail = await this.userModel.findOne({ email });
-      const existUserName = await this.userModel.findOne({ userName });
+       if (userName.length <= 0) {
+         return response.status(401).json({ message: 'username não pode ser vázio.' });
+       }
 
-      if (existEmail) {
-        return response.status(401).json({ message: 'Este e-mail já está cadastrado.' });
-      }
+       const existEmail = await this.userModel.findOne({ email });
+       const existUserName = await this.userModel.findOne({ userName });
 
-      if (existUserName) {
-        return response.status(401).json({ message: 'Este username já está cadastrado.' });
-      }
+       if (existEmail) {
+         return response.status(401).json({ message: 'Este e-mail já está cadastrado.' });
+       }
 
-      if (name.length <= 0) {
-        return response.status(401).json({ message: 'nome muito curto.' });
-      }
+       if (existUserName) {
+         return response.status(401).json({ message: 'Este username já está cadastrado.' });
+       }
 
-      if (password.length <= 8) {
-        return response.status(401).json({ message: 'sua seha deve ter no mínimo 8 caracteres.' });
-      }
+       if (name.length <= 0) {
+         return response.status(401).json({ message: 'nome muito curto.' });
+       }
 
-      if (this.#validationPassword(password) === false) {
-        return response.status(401).json({
-          message: 'Sua senha de ter no mínimo 3 letras maiúscula,  3 minúscula e 3 números',
-        });
-      }
+       if (password.length <= 8) {
+         return response.status(401).json({ message: 'sua seha deve ter no mínimo 8 caracteres.' });
+       }
 
-      const user = await this.userModel.create({
-        email, name, userName, hashPassword: 'a18u2981fgdfghf28u0', idKow: 'a18u2dsfhgdfg98128u0',
-      });
-      return response.status(201).json({ message: 'Conta cadastrada com sucesso, ative sua conta através do e-mail', user });
-    } catch (error) {
-      console.log(error);
-      return response.status(500).json({ message: 'internal server error. we are working to fix it' });
-    }
-  }
+       if (this.#validationPassword(password) === false) {
+         return response.status(401).json({ message: 'Sua senha de ter no mínimo 3 letras maiúscula,  3 minúscula e 3 números' });
+       }
+
+       const user = await this.userModel.create({
+         email, name, userName, hashPassword: 'a18u2981fgdfghf28u0', idKow: 'a18u2dsfhgdfg98128u0',
+       });
+
+       return response.status(201).json({ message: 'Conta cadastrada com sucesso, ative sua conta através do e-mail', user });
+     } catch (error) {
+       console.log(error);
+       return response.status(500).json({ message: 'internal server error. we are working to fix it' });
+     }
+   }
 }
 
 export default UserController;

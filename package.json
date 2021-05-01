@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "build": "babel src --extensions \".js\" --out-dir build --copy-files --no-copy-ignored",
-    "start": "node server.js",
+    "start": "NODE_ENV=production node server.js",
     "dev": "nodemon --exec babel-node --ignore __tests__ --ignore build src/server.js",
     "test": "jest",
     "development_test": "nodemon --exec babel-node --ignore __tests__ --ignore build all.js"
