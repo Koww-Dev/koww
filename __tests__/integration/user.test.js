@@ -4,7 +4,7 @@ import connection from '../../src/database';
 import application from '../../src/app';
 import User from '../../src/app/models/User';
 
-describe('User', () => {
+describe('Register User and validation e-mail', () => {
   beforeEach(async () => {
     try {
       await connection.connection.dropCollection('users');
@@ -28,8 +28,9 @@ describe('User', () => {
   });
 
   it('should not create user in platform with e-mail what already register.', async (done) => {
+    const email = 'kevson@gmail.com';
     await User.create({
-      email: 'kevson@gmail.com',
+      email,
       name: 'Kevson Filipe',
       userName: 'Kevson123',
       hashPassword: 'a18u298128u0',
@@ -77,7 +78,7 @@ describe('User', () => {
     done();
   });
 
-  it('should not create user in platform with username aready register.', async (done) => {
+  it('should not create user in platform with username already register.', async (done) => {
     await User.create({
       email: faker.internet.email(),
       name: faker.name.findName(),
@@ -155,13 +156,13 @@ describe('User', () => {
     done();
   });
 
-  it('should create user in platform with strong password.', async (done) => {
+  it('should create user with valid data and send email with token for validation', async (done) => {
     const response = await request(application)
       .post('/create_kow_user')
       .send({
-        email: 'kevson@gmail.com',
+        email: faker.internet.email(),
         name: faker.name.findName(),
-        userName: 'Kevson123',
+        userName: 'Kevson123bhrb',
         password: '2312312323DFGHFGdfgdfgxdfgASDASDASD',
       });
 
@@ -179,8 +180,3 @@ describe('User', () => {
     }
   });
 });
-
-// email: faker.internet.email(),
-// name: faker.name.findName(),
-// userName: faker.internet.userName(),
-// password: faker.internet.password(),

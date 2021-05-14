@@ -1,4 +1,8 @@
-import crypto from 'bcryptjs';
+import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
+import addHours from 'date-fns/addHours';
+
 import User from '../../models/User';
 
 class UserController {
@@ -40,61 +44,92 @@ class UserController {
     return isPassValid;
   }
 
+  #validationEmail = (email) => {
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailPattern.test(email);
+  }
+
   /**
    * Creates an instance of Circle.
    * @author Kevson Filipe
    * @param {import("express").Request} request
    * @param {import("express").Response} response
   */
-   createUser = async (request, response) => {
-     /**
+  createUser = async (request, response) => {
+    /**
      * @type {{ email: string, name: string, userName: string, password: string }}
     */
-     const {
-       email, name, userName, password,
-     } = request.body;
-     try {
-       if (!email.includes('@') || !email.includes('.com')) {
-         return response.status(401).json({ message: 'e-mail inválido.' });
-       }
+    const {
+      email, name, userName, password,
+    } = request.body;
+    try {
+      if (email.length <= 0 || !this.#validationEmail(email)) {
+        return response.status(401).json({ message: 'e-mail inválido.' });
+      }
 
-       if (userName.length <= 0) {
-         return response.status(401).json({ message: 'username não pode ser vázio.' });
-       }
+      if (userName.length <= 0) {
+        return response.status(401).json({ message: 'username não pode ser vázio.' });
+      }
 
-       const existEmail = await this.userModel.findOne({ email });
-       const existUserName = await this.userModel.findOne({ userName });
+      const existEmail = await this.userModel.findOne({ email }); // null
+      const existUserName = await this.userModel.findOne({ userName });
 
-       if (existEmail) {
-         return response.status(401).json({ message: 'Este e-mail já está cadastrado.' });
-       }
+      if (existEmail) {
+        return response.status(401).json({ message: 'Este e-mail já está cadastrado.' });
+      }
 
-       if (existUserName) {
-         return response.status(401).json({ message: 'Este username já está cadastrado.' });
-       }
+      if (existUserName) {
+        return response.status(401).json({ message: 'Este username já está cadastrado.' });
+      }
 
-       if (name.length <= 0) {
-         return response.status(401).json({ message: 'nome muito curto.' });
-       }
+      if (name.length <= 0) {
+        return response.status(401).json({ message: 'nome muito curto.' });
+      }
 
-       if (password.length <= 8) {
-         return response.status(401).json({ message: 'sua seha deve ter no mínimo 8 caracteres.' });
-       }
+      if (password.length <= 8) {
+        return response.status(401).json({ message: 'sua senha deve ter no mínimo 8 caracteres.' });
+      }
 
-       if (this.#validationPassword(password) === false) {
-         return response.status(401).json({ message: 'Sua senha de ter no mínimo 3 letras maiúscula,  3 minúscula e 3 números' });
-       }
+      if (this.#validationPassword(password) === false) {
+        return response.status(401).json({ message: 'Sua senha de ter no mínimo 3 letras maiúscula,  3 minúscula e 3 números' });
+      }
 
-       const user = await this.userModel.create({
-         email, name, userName, hashPassword: 'a18u2981fgdfghf28u0', idKow: 'a18u2dsfhgdfg98128u0',
-       });
+      const salt = bcrypt.genSaltSync();
+      const id = (crypto.randomBytes(5).toString('hex')) + bcrypt.hashSync(email, salt);
 
-       return response.status(201).json({ message: 'Conta cadastrada com sucesso, ative sua conta através do e-mail', user });
-     } catch (error) {
-       console.log(error);
-       return response.status(500).json({ message: 'internal server error. we are working to fix it' });
-     }
-   }
+      const hashPassword = bcrypt.hashSync(password, salt);
+
+      const user = await this.userModel.create({
+        email,
+        name,
+        userName,
+        hashPassword,
+        idKow: id,
+        tokens: [{
+          name: 'e-mail',
+          expire: addHours(new Date(), 1),
+          token: crypto.randomBytes(5).toString('hex'),
+        }],
+      });
+
+      const token = jwt.sign({ data: user.id }, process.env.SECRET_KOW, {
+        expiresIn: 60,
+      });
+
+      user.hashPassword = undefined;
+      user.tokens = undefined;
+      user.isPremiun = undefined;
+
+      return response.status(201).json({
+        message: 'Conta cadastrada com sucesso, ative sua conta através do e-mail',
+        user,
+        token,
+      });
+    } catch (error) {
+      console.log(error);
+      return response.status(500).json({ message: 'internal server error. we are working to fix it' });
+    }
+  }
 }
 
 export default UserController;

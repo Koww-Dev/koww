@@ -7,6 +7,13 @@ const UserSchema = new mongoose.Schema({
     unique: true,
   },
 
+  isValid: {
+    type: Boolean,
+    select: false,
+    default: false,
+    required: true,
+  },
+
   userName: {
     type: String,
     required: true,
@@ -43,12 +50,30 @@ const UserSchema = new mongoose.Schema({
   isPremiun: {
     type: Boolean,
     default: false,
+    select: false,
   },
 
   idProject: [
     {
       type: String,
       required: true,
+    },
+  ],
+
+  tokens: [
+    {
+      name: {
+        type: String,
+        require: true,
+      },
+      expire: {
+        type: Date,
+        require: true,
+      },
+      token: {
+        type: String,
+        require: true,
+      },
     },
   ],
 });
