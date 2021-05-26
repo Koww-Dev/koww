@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import addHours from 'date-fns/addHours';
-
+import Email from '../../../services/email';
 import User from '../../models/User';
 
 class UserController {
@@ -99,6 +99,8 @@ class UserController {
 
       const hashPassword = bcrypt.hashSync(password, salt);
 
+      const tokenEmail = crypto.randomBytes(5).toString('hex');
+
       const user = await this.userModel.create({
         email,
         name,
@@ -108,7 +110,7 @@ class UserController {
         tokens: [{
           name: 'e-mail',
           expire: addHours(new Date(), 1),
-          token: crypto.randomBytes(5).toString('hex'),
+          token: tokenEmail,
         }],
       });
 
@@ -119,6 +121,8 @@ class UserController {
       user.hashPassword = undefined;
       user.tokens = undefined;
       user.isPremiun = undefined;
+
+      await new Email().valitation({ email, name, token: tokenEmail });
 
       return response.status(201).json({
         message: 'Conta cadastrada com sucesso, ative sua conta através do e-mail',

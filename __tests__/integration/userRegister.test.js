@@ -15,7 +15,7 @@ describe('Register User and validation e-mail', () => {
 
   it('should not create user in platform with e-mail invalid.', async (done) => {
     const response = await request(application)
-      .post('/create_kow_user')
+      .post('/sinup')
       .send({
         email: 'kevsonfilipesantos',
         name: 'Kevson Filipe',
@@ -38,7 +38,7 @@ describe('Register User and validation e-mail', () => {
     });
 
     const response = await request(application)
-      .post('/create_kow_user')
+      .post('/sinup')
       .send({
         email: 'kevson@gmail.com',
         name: faker.name.findName(),
@@ -52,7 +52,7 @@ describe('Register User and validation e-mail', () => {
 
   it('should not create user in platform with empty name.', async (done) => {
     const response = await request(application)
-      .post('/create_kow_user')
+      .post('/sinup')
       .send({
         email: 'kevson@gmail.com',
         name: '',
@@ -66,7 +66,7 @@ describe('Register User and validation e-mail', () => {
 
   it('should not create user in platform with empty username.', async (done) => {
     const response = await request(application)
-      .post('/create_kow_user')
+      .post('/sinup')
       .send({
         email: 'kevson@gmail.com',
         name: faker.name.findName(),
@@ -88,7 +88,7 @@ describe('Register User and validation e-mail', () => {
     });
 
     const response = await request(application)
-      .post('/create_kow_user')
+      .post('/sinup')
       .send({
         email: 'kevson@gmail.com',
         name: faker.name.findName(),
@@ -102,7 +102,7 @@ describe('Register User and validation e-mail', () => {
 
   it('should not create user in platform with passowrd less than 8 characters.', async (done) => {
     const response = await request(application)
-      .post('/create_kow_user')
+      .post('/sinup')
       .send({
         email: 'kevson@gmail.com',
         name: faker.name.findName(),
@@ -116,7 +116,7 @@ describe('Register User and validation e-mail', () => {
 
   it('should not create user in platform with passowrd less than 3 characters uppercase.', async (done) => {
     const response = await request(application)
-      .post('/create_kow_user')
+      .post('/sinup')
       .send({
         email: 'kevson@gmail.com',
         name: faker.name.findName(),
@@ -130,7 +130,7 @@ describe('Register User and validation e-mail', () => {
 
   it('should not create user in platform with passowrd less than 3 characters lowcase.', async (done) => {
     const response = await request(application)
-      .post('/create_kow_user')
+      .post('/sinup')
       .send({
         email: 'kevson@gmail.com',
         name: faker.name.findName(),
@@ -144,7 +144,7 @@ describe('Register User and validation e-mail', () => {
 
   it('should not create user in platform with passowrd less than 3 numeric characters.', async (done) => {
     const response = await request(application)
-      .post('/create_kow_user')
+      .post('/sinup')
       .send({
         email: 'kevson@gmail.com',
         name: faker.name.findName(),
@@ -158,7 +158,7 @@ describe('Register User and validation e-mail', () => {
 
   it('should create user with valid data and send email with token for validation', async (done) => {
     const response = await request(application)
-      .post('/create_kow_user')
+      .post('/sinup')
       .send({
         email: faker.internet.email(),
         name: faker.name.findName(),

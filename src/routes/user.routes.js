@@ -1,8 +1,11 @@
 import { Router } from 'express';
 import UserController from '../app/controllers/userController';
+import SessionController from '../app/controllers/sessionController';
 
 class Routes {
   userController;
+
+  sessionController = new SessionController();
 
   constructor() {
     this.routes = Router();
@@ -12,7 +15,8 @@ class Routes {
   }
 
   allRoutesSession() {
-    this.routes.post('/create_kow_user', this.userController.createUser);
+    this.routes.post('/sign', this.sessionController.sign);
+    this.routes.post('/sinup', this.userController.createUser);
   }
 }
 

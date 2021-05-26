@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import routes from './routes/user.routes';
+import userRoutes from './routes/user.routes';
 
 dotenv.config({
   path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',
@@ -19,7 +19,7 @@ class AppController {
   }
 
   routes() {
-    this.express.use(routes);
+    this.express.use(userRoutes);
   }
 }
 

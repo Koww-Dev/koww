@@ -21,7 +21,8 @@
     "express": "^4.17.1",
     "faker": "^5.5.3",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.12.5"
+    "mongoose": "^5.12.5",
+    "nodemailer": "^6.6.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.14",
