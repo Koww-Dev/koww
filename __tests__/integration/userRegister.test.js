@@ -172,7 +172,7 @@ describe('Register User and validation e-mail', () => {
 
   afterAll(async (done) => {
     try {
-      await connection.connection.close();
+      await connection.connection.close(true);
       done();
     } catch (error) {
       // console.log(error);
