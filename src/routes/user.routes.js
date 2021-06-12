@@ -21,6 +21,7 @@ class Routes {
     this.routes.post('/sign', this.sessionController.sign);
     this.routes.post('/sinup', this.userController.createUser);
     this.routes.use(this.tokenValidation.validationMidddleware);
+    this.routes.get('/', this.userController.getUserData);
   }
 }
 

@@ -134,6 +134,17 @@ class UserController {
       return response.status(500).json({ message: 'internal server error. we are working to fix it' });
     }
   }
+
+  /**
+   * Creates an instance of Circle.
+   * @author Kevson Filipe
+   * @param {import("express").Request} request
+   * @param {import("express").Response} response
+  */
+  getUserData = async (request, response) => {
+    const data = await this.userModel.findOne({ idKow: request.userId });
+    response.status(200).json(data);
+  }
 }
 
 export default UserController;

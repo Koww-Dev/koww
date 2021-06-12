@@ -27,7 +27,9 @@ class SessionController {
       return response.status(401).json({ message: 'User not found' });
     }
 
-    if (!await bcrypt.compare(password, user.hashPassword)) {
+    const isValidPassword = await bcrypt.compare(password, user.hashPassword);
+
+    if (!isValidPassword) {
       return response.status(401).send({ error: 'Invalid password' });
     }
 

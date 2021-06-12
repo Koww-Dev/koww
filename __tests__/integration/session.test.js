@@ -5,6 +5,7 @@ import crypto from 'crypto';
 import request from 'supertest';
 import connection from '../../src/database';
 import application from '../../src/app';
+import SessionController from '../../src/app/controllers/sessionController';
 import User from '../../src/app/models/User';
 
 describe('Authentication', () => {
@@ -18,7 +19,7 @@ describe('Authentication', () => {
 
   it('should authenticate with valid credentials.', async (done) => {
     const password = '2312312323DFGHFGdfgdfgxdfgASDASDASDsasd';
-    const email = faker.internet.email();
+    const email = 'kevsoasdas@gmail.com';
 
     const salt = bcrypt.genSaltSync();
     const id = (crypto.randomBytes(5).toString('hex')) + bcrypt.hashSync(email, salt);
@@ -38,6 +39,7 @@ describe('Authentication', () => {
         email,
         password,
       });
+
     expect(response.status).toBe(200);
     done();
   });
@@ -117,6 +119,44 @@ describe('Authentication', () => {
       });
 
     expect(response.body).toHaveProperty('token');
+  });
+
+  it('should return jwt token when authenticated', async () => {
+    const password = '2312312323DFGHFGdfgdfgxdfgASDASDASD';
+    const email = faker.internet.email();
+
+    const salt = bcrypt.genSaltSync();
+    const id = (crypto.randomBytes(5).toString('hex')) + bcrypt.hashSync(email, salt);
+    const hashPassword = bcrypt.hashSync(password, salt);
+
+    await User.create({
+      email,
+      name: faker.name.findName(),
+      userName: faker.internet.userName(),
+      hashPassword,
+      idKow: id,
+    });
+
+    const response = await request(application)
+      .get('/')
+      .set('Authorization', `Bearer ${new SessionController().generateToken({ id })}`);
+
+    expect(response.status).toBe(200);
+  });
+
+  it('should not be able to access private routes without jwt token', async () => {
+    const response = await request(application)
+      .get('/');
+
+    expect(response.status).toBe(401);
+  });
+
+  it('should not be able to access private routes with invalid jwt token', async () => {
+    const response = await request(application)
+      .get('/')
+      .set('Authorization', 'Bearer 123123');
+
+    expect(response.status).toBe(401);
   });
 
   afterAll(async (done) => {
