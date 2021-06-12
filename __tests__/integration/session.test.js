@@ -151,6 +151,14 @@ describe('Authentication', () => {
     expect(response.status).toBe(401);
   });
 
+  it('should not be able to access private routes without Bearer jwt token', async () => {
+    const response = await request(application)
+      .get('/')
+      .set('Authorization', '123123');
+
+    expect(response.status).toBe(401);
+  });
+
   it('should not be able to access private routes with invalid jwt token', async () => {
     const response = await request(application)
       .get('/')

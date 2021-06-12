@@ -130,7 +130,6 @@ class UserController {
         token,
       });
     } catch (error) {
-      console.log(error);
       return response.status(500).json({ message: 'internal server error. we are working to fix it' });
     }
   }

@@ -170,6 +170,21 @@ describe('Register User and validation e-mail', () => {
     done();
   });
 
+  it('should create user with valid data and send email with token for validation', async (done) => {
+    User.db.close(true);
+    const response = await request(application)
+      .post('/sinup')
+      .send({
+        email: faker.internet.email(),
+        name: faker.name.findName(),
+        userName: 'Kevson123bhrb',
+        password: '2312312323DFGHFGdfgdfgxdfgASDASDASD',
+      });
+
+    expect(response.status).toBe(500);
+    done();
+  });
+
   afterAll(async (done) => {
     try {
       await connection.connection.close(true);
