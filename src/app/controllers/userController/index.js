@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
-import addHours from 'date-fns/addHours';
+import { addHours, compareAsc } from 'date-fns';
 import Email from '../../../services/email';
 import User from '../../models/User';
 
@@ -115,7 +115,7 @@ class UserController {
       });
 
       const token = jwt.sign({ data: user.id }, process.env.SECRET_KOW, {
-        expiresIn: 60,
+        expiresIn: 86400,
       });
 
       user.hashPassword = undefined;
@@ -132,6 +132,80 @@ class UserController {
     } catch (error) {
       return response.status(500).json({ message: 'internal server error. we are working to fix it' });
     }
+  }
+
+  /**
+   * Creates an instance of Circle.
+   * @author Kevson Filipe
+   * @param {import("express").Request} request
+   * @param {import("express").Response} response
+  */
+  getTokenForValidationEmail = async (request, response) => {
+    const idKow = request.userId;
+    const user = await this.userModel.findOne({ idKow }).select('+isValid');
+
+    const { isValid } = user;
+
+    if (isValid === true) {
+      return response.status(200).json('Seu e-mail já está validado');
+    }
+
+    const tokenEmail = crypto.randomBytes(5).toString('hex');
+
+    try {
+      await this.userModel.findOneAndUpdate({ idKow }, {
+        $push: {
+          tokens: {
+            name: 'e-mail',
+            expire: addHours(new Date(), 1),
+            token: tokenEmail,
+          },
+        },
+      });
+
+      await new Email().valitation({ email: user.email, name: user.name, token: tokenEmail });
+
+      return response.status(200).json({ message: 'Emviamos um e-mail com o código de validação' });
+    } catch (error) {
+      return response.status(500).json({ message: 'Server internal error' });
+    }
+  }
+
+  validationEmail = async (request, response) => {
+    const idKow = request.userId;
+    const { tokenEmail } = request.body;
+
+    const user = await this.userModel.findOne({ idKow }).select('+isValid');
+
+    const indextoken = [];
+    const data = await Promise.all(
+      user.tokens.filter((item) => {
+        if (item.token !== tokenEmail) { return false; }
+        const { _id } = item;
+        return indextoken.push(_id);
+      }),
+    );
+
+    if (indextoken.length === 0 || data[0].name !== 'e-mail') {
+      await this.userModel.findOneAndUpdate({ idKow },
+        { $pull: { tokens: { _id: indextoken[0] } } });
+      return response.status(401).json({ message: 'Token invalid  dtdthrt' });
+    }
+
+    const isValid = compareAsc(data[0].expire, new Date());
+
+    if (isValid !== 1) {
+      await this.userModel.findOneAndUpdate({ idKow },
+        { $pull: { tokens: { _id: indextoken[0] } } });
+
+      return response.status(401).json({ message: 'Token expire' });
+    }
+
+    await this.userModel.findOneAndUpdate({ idKow }, { isValid: true });
+
+    await this.userModel.findOneAndUpdate({ idKow }, { $pull: { tokens: { _id: indextoken[0] } } });
+
+    return response.status(200).json('E-mail foi válidado');
   }
 
   /**

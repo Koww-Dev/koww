@@ -11,7 +11,6 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     select: false,
     default: false,
-    required: true,
   },
 
   userName: {

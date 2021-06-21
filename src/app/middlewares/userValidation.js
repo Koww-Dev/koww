@@ -40,6 +40,25 @@ class EmailValidation {
       return response.status(401).json({ message: 'Token invalid' });
     }
   }
+
+  /**
+   * Creates an instance of Circle.
+   * @author Kevson Filipe
+   * @param {import("express").Request} request
+   * @param {import("express").Response} response
+   * @param {import("express").NextFunction} response
+  */
+  validationEmail = async (request, response, next) => {
+    const idKow = request.userId;
+
+    const { isValid } = await this.userModel.findOne({ idKow }).select('+isValid');
+
+    if (!isValid) {
+      return response.status(401).json({ isValidEmail: false });
+    }
+
+    return next();
+  }
 }
 
 export default EmailValidation;

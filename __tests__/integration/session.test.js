@@ -40,6 +40,7 @@ describe('Authentication', () => {
         password,
       });
 
+    console.log(response.body);
     expect(response.status).toBe(200);
     done();
   });
@@ -131,6 +132,7 @@ describe('Authentication', () => {
 
     await User.create({
       email,
+      isValid: true,
       name: faker.name.findName(),
       userName: faker.internet.userName(),
       hashPassword,

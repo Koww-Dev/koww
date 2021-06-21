@@ -24,7 +24,7 @@ class SessionController {
     const user = await User.findOne({ email }).select('+hashPassword');
 
     if (!user) {
-      return response.status(401).json({ message: 'User not found' });
+      return response.status(401).json({ message: 'User not found', user });
     }
 
     const isValidPassword = await bcrypt.compare(password, user.hashPassword);
