@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import UserController from '../app/controllers/userController';
 import SessionController from '../app/controllers/sessionController';
+import UserController from '../app/controllers/userController';
 import EmailValidation from '../app/middlewares/userValidation';
 
 class Routes {
@@ -25,6 +25,7 @@ class Routes {
     this.routes.post('/email/validation', this.userController.validationEmail);
     this.routes.use(this.tokenValidation.validationEmail);
     this.routes.get('/', this.userController.getUserData);
+    this.routes.put('/update', this.userController.updateUser);
   }
 }
 

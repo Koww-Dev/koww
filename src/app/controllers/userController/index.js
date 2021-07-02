@@ -233,6 +233,50 @@ class UserController {
     const data = await this.userModel.findOne({ idKow: request.userId });
     response.status(200).json(data);
   }
+
+  /**
+   * Creates an instance of Circle.
+   * @author Kevson Filipe
+   * @param {import("express").Request} request
+   * @param {import("express").Response} response
+  */
+  updateUser = async (request, response) => {
+    const {
+      name,
+      userName,
+      cep,
+      github,
+      tecnologias,
+    } = request.body;
+
+    const idKow = request.userId;
+
+    try {
+      if (!name) {
+        return response.status(401).json('O nome não pode ser vázio');
+      }
+
+      if (!userName) {
+        return response.status(410).json('O username não pode ser vázio');
+      }
+
+      const user = await this.userModel.findOne({ idKow });
+
+      if (user.userName === userName) {
+        return response.status(410).json('Esse username já existe');
+      }
+
+      await this.userModel.findOneAndUpdate({ idKow },
+        {
+          $push: { tecnologias }, name, cep, github, userName,
+        });
+
+      const data = await this.userModel.findOne({ idKow });
+      return response.status(200).json(data);
+    } catch (error) {
+      return response.status(500).json({ message: 'SERVER INTERNAL ERROR', error });
+    }
+  }
 }
 
 export default UserController;
