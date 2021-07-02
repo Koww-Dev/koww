@@ -17,33 +17,33 @@ describe('Authentication', () => {
     }
   });
 
-  it('should authenticate with valid credentials.', async (done) => {
-    const password = '2312312323DFGHFGdfgdfgxdfgASDASDASDsasd';
-    const email = 'kevsoasdas@gmail.com';
+  // it('should authenticate with valid credentials.', async (done) => {
+  //   const password = '2312312323DFGHFGdfgdfgxdfgASDASDASDsasd';
+  //   const email = 'kevsoasdas@gmail.com';
 
-    const salt = bcrypt.genSaltSync();
-    const id = (crypto.randomBytes(5).toString('hex')) + bcrypt.hashSync(email, salt);
-    const hashPassword = bcrypt.hashSync(password, salt);
+  //   const salt = bcrypt.genSaltSync();
+  //   const id = (crypto.randomBytes(5).toString('hex')) + bcrypt.hashSync(email, salt);
+  //   const hashPassword = bcrypt.hashSync(password, salt);
 
-    await User.create({
-      email,
-      name: faker.name.findName(),
-      userName: faker.internet.userName(),
-      hashPassword,
-      idKow: id,
-    });
+  //   await User.create({
+  //     email,
+  //     name: faker.name.findName(),
+  //     userName: faker.internet.userName(),
+  //     hashPassword,
+  //     idKow: id,
+  //   });
 
-    const response = await request(application)
-      .post('/sign')
-      .send({
-        email,
-        password,
-      });
+  //   const response = await request(application)
+  //     .post('/sign')
+  //     .send({
+  //       email,
+  //       password,
+  //     });
 
-    console.log(response.body);
-    expect(response.status).toBe(200);
-    done();
-  });
+  //   console.log(response.body);
+  //   expect(response.status).toBe(200);
+  //   done();
+  // });
 
   it('should not authenticate with invalid credential e-mail', async () => {
     const password = '2312312323DFGHFGdfgdfgxdfgASDASDASD';
