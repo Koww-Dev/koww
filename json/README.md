@@ -1,0 +1,1 @@
+### Arquivos json para operções no insomnia

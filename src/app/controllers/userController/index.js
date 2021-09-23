@@ -1,7 +1,11 @@
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-import { addHours, compareAsc } from 'date-fns';
+import {
+  addHours,
+  compareAsc,
+} from 'date-fns';
 import jwt from 'jsonwebtoken';
+
 import Email from '../../../services/email';
 import User from '../../models/User';
 
@@ -130,12 +134,13 @@ class UserController {
         token,
       });
     } catch (error) {
+      console.log(error);
       return response.status(500).json({ message: 'internal server error. we are working to fix it' });
     }
   }
 
   /**
-   * Creates an instance of Circle.
+   * Recebe o id do usuário logado cria e envia um token para o e-mail do user
    * @author Kevson Filipe
    * @param {import("express").Request} request
    * @param {import("express").Response} response
@@ -246,7 +251,6 @@ class UserController {
       userName,
       cep,
       github,
-      tecnologias,
     } = request.body;
 
     const idKow = request.userId;
@@ -266,15 +270,101 @@ class UserController {
         return response.status(410).json('Esse username já existe');
       }
 
+      // falta tecnologias
+
       await this.userModel.findOneAndUpdate({ idKow },
         {
-          $push: { tecnologias }, name, cep, github, userName,
+          name, cep, github, userName,
         });
 
       const data = await this.userModel.findOne({ idKow });
+
+      data.tokens = undefined;
+
       return response.status(200).json(data);
     } catch (error) {
-      return response.status(500).json({ message: 'SERVER INTERNAL ERROR', error });
+      return response.status(500).json({ message: 'SERVER INTERNAL ERROR' });
+    }
+  }
+
+  /**
+   * Creates an instance of Circle.
+   * @author Kevson Filipe
+   * @param {import("express").Request} request
+   * @param {import("express").Response} response
+  */
+  sendTokenForResetPassword = async (request, response) => {
+    const { email } = request.body;
+
+    if (!email) {
+      return response.status(404).json('Este e-mail não existe');
+    }
+
+    const data = await this.userModel.findOne({ email });
+
+    if (!data) {
+      return response.status(404).json('Este e-mail não existe');
+    }
+
+    const tokenEmail = crypto.randomBytes(5).toString('hex');
+
+    try {
+      await this.userModel.findOneAndUpdate({ email }, {
+        $push: {
+          tokens: {
+            name: 'resetPassword',
+            expire: addHours(new Date(), 1),
+            token: tokenEmail,
+          },
+        },
+      });
+
+      await new Email().valitation({ email: data.email, name: data.name, token: tokenEmail });
+
+      return response.status(200).json({ message: 'Emviamos um e-mail com o código de validação' });
+    } catch (error) {
+      return response.status(500).json({ message: 'Server internal error' });
+    }
+  }
+
+  /**
+   * Creates an instance of Circle.
+   * @author Kevson Filipe
+   * @param {import("express").Request} request
+   * @param {import("express").Response} response
+  */
+  resetPassword = async (request, response) => {
+    const { email, token, newPassword } = request.body;
+
+    if (!email) {
+      return response.status(404).json({ message: 'E-mail inválido' });
+    }
+
+    if (!token) {
+      return response.status(404).json({ message: 'token inválido sdfsdfsdf' });
+    }
+
+    if (!newPassword) {
+      return response.status(404).json({ message: 'digite a nova senha' });
+    }
+
+    const data = await this.userModel.findOne({ email });
+
+    if (!data) {
+      return response.status(404).json({ message: 'E-mail não encontrado' });
+    }
+
+    if (!data.tokens) {
+      return response.status(200).json('abaju');
+    }
+
+    try {
+      const id = await data.tokens.find((item) => item.token === '301ddaa911');
+
+      return response.status(200).json({ message: 'kdlasçd', id });
+    } catch (error) {
+      console.log(error);
+      return response.status(500).json({ message: 'Server internal error' });
     }
   }
 }

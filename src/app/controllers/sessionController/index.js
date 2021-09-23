@@ -1,11 +1,12 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+
 import User from '../../models/User';
 
 class SessionController {
   userModel = User;
 
-  generateToken = (pasrams = {}) => jwt.sign(pasrams, process.env.SECRET_KOW, {
+  generateToken = (params = {}) => jwt.sign(params, process.env.SECRET_KOW, {
     expiresIn: 86400,
   })
 
